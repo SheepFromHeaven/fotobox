@@ -1,30 +1,54 @@
 const Jimp = require("jimp");
 const watch = require('node-watch');
+const printer = require('printer');
 
-const size = 512;
-const imageSrcFolder = './src/';
-const imageDestFolder = './dest';
+const config = require('./config');
 
-const maskPath = './mask.png';
-
-watch(imageSrcFolder, { recursive: false }, function(evt, name) {
-  console.log(evt);
-  onImgChanged(name);
+watch(config.imagePaths.src, { recursive: false }, function(evt, name) {
+  if(evt === 'update') {
+    onImgChanged(getImageNameFromPath(name));
+  }
 });
 
 const onImgChanged = (imgName) => {
-  console.log(imgName);
-  Jimp.read(imgName).then((img) => {
-    Jimp.read(maskPath).then((maskImg) => {
+  Jimp.read(mergeWithSourcePath(imgName)).then((img) => {
+    Jimp.read(config.imagePaths.mask).then((maskImg) => {
       img
-        .cover(size, size)
-        .crop(0,0,size,size)
         .clone()
-        .mask(maskImg.contain(size, size), 0,0)
-        .write(imgName.replace('src', imageDestFolder).replace('.jpg', '.png'));
+        .cover(config.imageWidth, config.imageHeight)
+        .crop(0, 0, config.imageWidth, config.imageHeight)
+        .composite(maskImg.contain(config.imageWidth, config.imageHeight), 0,0)
+        .write(mergeWithDestPath(imgName), onFileWritten(mergeWithDestPath(imgName)));
     });
   }).catch(function (err) {
-    console.error('ERROR: ' + err);
-
+    console.error('Error creating image: ' + err);
   });
+};
+
+const onFileWritten = (writtenFile) => () => {
+  if(config.printerEnabled) {
+    printImage(writtenFile);
+  }
+};
+
+const getImageNameFromPath = (imagePath) => {
+  const splitPath = imagePath.split('/');
+  return splitPath[splitPath.length - 1];
+};
+
+const mergeWithSourcePath = (imageName) => `${config.imagePaths.src}/${imageName}`;
+
+const mergeWithDestPath = (imageName) => `${config.imagePaths.dest}/${imageName.replace('.jpg', '.png')}`;
+
+const printImage = (filePath) => {
+  printer.printFile({
+    filename: filePath,
+    printer: config.printerName,
+    success:function(jobID){
+      console.log('sent to printer with ID: ' + jobID);
+    },
+    error:function(err){
+      console.log(err);
+    }
+  })
 };

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "jimp": "^0.2.28",
-    "node-watch": "^0.5.7"
+    "node-watch": "^0.5.7",
+    "printer": "^0.2.2"
   }
 }
