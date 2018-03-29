@@ -12,6 +12,7 @@
     "nodemon": "^1.17.1"
   },
   "dependencies": {
+    "gphoto2": "^0.2.0",
     "jimp": "^0.2.28",
     "node-watch": "^0.5.7",
     "printer": "^0.2.2"
