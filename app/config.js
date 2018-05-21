@@ -1,11 +1,13 @@
 module.exports = {
-  printerName: 'PRINTER_NAME',
-  printerEnabled: true,
-  imagePaths: {
-    src: `${__dirname}/src`,
-    dest: `${__dirname}/dest`,
-    mask: `${__dirname}/mask.png`
+  printer: {
+    enabled: true,
+    name: 'Canon_CP910'
   },
-  imageWidth: 600,
-  imageHeight: 400
+  imagePaths: {
+    dest: `${__dirname}/imageDest`,
+    mask: `${__dirname}/mask.png`,
+    mock: `${__dirname}/mock/mock.jpeg`
+  },
+  imageWidth: 2400,
+  imageHeight: 1600
 };

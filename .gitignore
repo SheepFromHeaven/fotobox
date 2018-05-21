@@ -2,3 +2,5 @@ node_modules
 src/*
 dest/*
 mask.png
+.idea
+.DS_Store
