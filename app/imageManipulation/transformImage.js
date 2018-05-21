@@ -6,18 +6,16 @@ module.exports = (buffer, callback, sharp) => {
     fs.writeFile(config.imagePaths.dest + '/test.png', buffer).then(() => {
       
     });
-    //sharp(config.imagePaths.mask)
-      //.resize(config.imageWidth, config.imageHeight)
-      //.toBuffer()
-      //.then(maskBuffer => {
+    sharp(config.imagePaths.mask)
+      .resize(config.imageWidth, config.imageHeight)
+      .toBuffer()
+      .then(maskBuffer => {
         sharp(buffer)
         .resize(config.imageWidth, config.imageHeight)
-        .overlayWith(config.imagePaths.mask)
+        .overlayWith(maskBuffer)
         .jpeg()
         .withMetadata()
         .toBuffer()
-        .then((() => {
-          log('Done!');
-        }));
-      //});
+        .then(callback);
+      });
   };
