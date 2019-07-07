@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prepare": "npm run install:libgphoto2 && npm run install:cups && npm run install:libcups",
+    "prepae": "npm run install:libgphoto2 && npm run install:cups && npm run install:libcups",
     "start": "nodemon app/index.js",
     "install:libgphoto2": "sudo apt-get install libgphoto2-dev",
     "install:libcups": "sudo apt-get install libcups2-dev",
@@ -19,7 +19,9 @@
     "express": "^4.16.3",
     "gphoto2": "^0.2.0",
     "node-watch": "^0.5.7",
+    "onoff": "^3.1.0",
     "printer": "^0.2.2",
-    "sharp": "^0.20.2"
+    "sharp": "^0.20.2",
+    "socket.io": "^2.1.1"
   }
 }

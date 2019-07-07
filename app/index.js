@@ -5,12 +5,34 @@ const shootPhoto = require('./camera/shootPhoto');
 const printBuffer = require('./printer/printBuffer');
 const onImgChanged = require('./imageManipulation/transformImage');
 
+const setupServer = require('./display/setupServer');
+
 const config = require('./config');
 const log = require('./util/log');
 
+const Gpio = require('onoff').Gpio;
+const button = new Gpio(4, 'in', 'both');
 
-const run = () => {
-  shootPhoto().then(transformImage).then(printBuffer);
+const PAGES = {
+  INDEX: '/',
+  PROCESSING: 'processing',
+  PRINTING: 'printing'
+};
+
+const run = (callback) => {
+  shootPhoto().then((image) => {
+    callback(PAGES.PROCESSING);
+    return transformImage(image);
+  }).then((buffer) => {
+    callback(PAGES.PRINTING);
+    setTimeout(() => {
+      clicked = false;
+      callback(PAGES.INDEX);
+    }, 10000);
+    return printBuffer(buffer);
+  }).catch((err) => {
+    log('ERROREROORERRORERRORERRORERRORERRORERRORERROR');
+  });
 };
 
 const transformImage = (image) => new Promise((res, rej) => {
@@ -18,23 +40,38 @@ const transformImage = (image) => new Promise((res, rej) => {
   onImgChanged(image, res, sharp);
 });
 
-const http = require('http')
-const port = 9000
 
-const requestHandler = (request, response) => {
-  response.end('<a href="/photo">Photo coming!</a>');
-  if(request.url.indexOf('photo')!== -1) {
-    setTimeout(run, 0);
-  }
-  console.log(request.url)
-}
+const app = require('express')();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const port = 9000;
+const clickInterval = 1000;
 
-const server = http.createServer(requestHandler)
+let clicked = false;
+let s;
 
-server.listen(port, (err) => {
-  if (err) {
-    return console.log('something bad happened', err)
-  }
+const callback = (key) => {
+  console.log('Redirect to ' + key);
+  s.emit('redirect', key);
+};
 
-  console.log(`server is listening on ${port}`)
-})
+io.on('connection', function(socket){
+  console.log('a user connected');
+  s = socket;
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+
+  button.watch(function (err, value) {
+    if(value && !clicked) {
+      clicked = true;
+      run(callback);
+    }
+  });
+});
+
+setupServer(app);
+
+http.listen(port, function(){
+  console.log('listening on *:' + port);
+});

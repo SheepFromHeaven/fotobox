@@ -1,0 +1,26 @@
+<head>
+    <link rel="stylesheet" href="./css/index.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let socket = io();
+        window.onkeydown = function(e) {
+            socket.emit('keydown');
+        };
+        socket.on('redirect', function(destination) {
+            window.location.href = destination;
+            console.log('Redirect to ' + destination);
+        });
+    </script>
+</head> 
+<body>
+    <div id="header">
+        <div id="logo">myPhotobox</div>
+    </div>
+    <div id="instruction">
+        <div id="instruction-picto">
+            <img src="./img/camera.png"/>
+        </div>
+        <div id="instruction-text">Please position yourself in front of the camera.<br>Press the trigger when you're ready!</div>
+    </div>
+    <div id="footer"></div>
+</body>

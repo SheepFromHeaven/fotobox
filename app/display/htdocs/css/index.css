@@ -1,0 +1,63 @@
+@font-face {
+    font-family: 'LogoFont';
+    src: url('Vincentia.otf') format("opentype");
+}
+
+@font-face {
+    font-family: 'InstructionFont';
+    src: url('Montserrat-Light.otf') format("opentype");
+}
+
+body {
+    background-color: lightgrey;
+    margin: 0;
+}
+
+#header {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to right, midnightblue, darkblue);
+    font-family: 'LogoFont';
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(to right, midnightblue, darkblue);
+}
+
+#logo {
+    font-size: 45pt;
+    line-height: 118px;
+    margin-left: 20px;
+    color: white;
+    text-align: center;
+}
+
+#instruction {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+}
+
+#instruction-picto {
+    margin-bottom: 50px;
+}
+
+img { 
+    width: 350px;
+}
+
+#instruction-text {
+    padding-left: 100px;
+    padding-right: 100px;
+    font-size: 30pt;
+    font-family: 'InstructionFont';
+    font-style: normal;
+    justify-content: center;
+}

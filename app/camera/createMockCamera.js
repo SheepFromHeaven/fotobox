@@ -5,7 +5,9 @@ module.exports = () => {
     const mockImg = fs.readFileSync(config.imagePaths.mock);
     return {
         takePicture: (opt, callback) => {
-            callback(undefined, mockImg);
+            setTimeout(() => {
+                callback(undefined, mockImg);
+            }, 1000);
         }
     }
 };

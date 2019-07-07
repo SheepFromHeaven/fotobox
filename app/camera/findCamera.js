@@ -10,6 +10,7 @@ module.exports = () => new Promise((resolve, reject) => {
       if(cameras.length > 0) {
         resolve(cameras[0]);
       } else {
+        log('creating mock camera');
         resolve(createMockCamera());
       }
     });
